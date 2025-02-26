@@ -11,11 +11,11 @@ export default function CardPopularNovel() {
     >
       {' '}
       {/* Dùng article để bao bọc card */}
-      <Card isFooterBlurred className='border-none h-[250px] relative ' radius='lg'>
+      <Card isFooterBlurred className='border-none h-[200px] relative flexs hrink-0 ' radius='lg'>
         <Image
           alt='Elf Devil Princess - Bìa truyện tiên hiệp fantasy'
-          className='object-cover w-full h-full'
-          height={150}
+          className='object-cover '
+          height={200}
           src='https://firebasestorage.googleapis.com/v0/b/prm392-7fdba.appspot.com/o/novel%2F%40wibuhihi03%20(14).jpg?alt=media&token=3a1a7891-3868-4755-9f2c-d402c8ecff81'
           width={150}
           isZoomed

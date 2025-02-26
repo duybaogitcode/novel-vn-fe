@@ -3,11 +3,11 @@ import { Heart } from 'lucide-react';
 
 export default function CardNovel() {
   return (
-    <Card isFooterBlurred className='border-none h-[250px] relative' radius='lg'>
+    <Card isFooterBlurred className='border-none h-[300px] relative flex-shrink-0' radius='lg'>
       <Image
         alt='Woman listing to music'
-        className='object-cover w-full h-full'
-        height={250}
+        className='object-cover h-full'
+        height={300}
         src='https://firebasestorage.googleapis.com/v0/b/prm392-7fdba.appspot.com/o/novel%2F%40wibuhihi03%20(14).jpg?alt=media&token=3a1a7891-3868-4755-9f2c-d402c8ecff81'
         width={250}
         isZoomed
@@ -23,6 +23,7 @@ export default function CardNovel() {
         >
           <div className='flex items-center space-x-1 '>
             <Heart />
+            {/* <p className='text-balance'>T</p> */}
           </div>
         </Button>
       </CardFooter>
