@@ -1,18 +1,18 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Input, Checkbox, Link, Divider } from '@heroui/react';
 import { Icon } from '@iconify/react';
 
 export default function Component() {
-  const [isVisible, setIsVisible] = React.useState(false);
-  const [isConfirmVisible, setIsConfirmVisible] = React.useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isConfirmVisible, setIsConfirmVisible] = useState(false);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
   const toggleConfirmVisibility = () => setIsConfirmVisible(!isConfirmVisible);
 
   return (
-    <div className='flex h-screen w-full items-center justify-center'>
+    <div className='flex w-full max-w-sm flex-col gap-4 rounded-large bg-content1 px-8 pb-10 pt-6 shadow-small'>
       <div className='flex w-full max-w-sm flex-col gap-4 rounded-large'>
         <div className='flex flex-col items-center pb-6'>
           <p className='text-xl font-medium'>Welcome</p>
