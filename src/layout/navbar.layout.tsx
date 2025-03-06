@@ -16,7 +16,6 @@ import {
 } from '@heroui/react';
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/src/context/auth.context';
-import { authService } from '@/src/service/auth.service';
 import { useRouter } from 'next/navigation';
 
 export default function Header() {
@@ -35,7 +34,7 @@ export default function Header() {
   }, []);
 
   const handleLogout = async () => {
-    await authService.logout();
+    // await authService.logout();
     router.push('/sign-in');
   };
 
@@ -71,8 +70,8 @@ export default function Header() {
               <Avatar
                 as='button'
                 className='transition-transform'
-                src={user.photoURL || undefined}
-                name={user.displayName || user.email?.charAt(0) || 'User'}
+                src={user.avatar || undefined}
+                name={user.email?.charAt(0) || 'User'}
               />
             </DropdownTrigger>
             <DropdownMenu aria-label='User Actions'>

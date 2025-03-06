@@ -9,7 +9,7 @@ import {
 import { auth } from '@/src/lib/firebase/config';
 import { SigninFormValues } from '@/src/lib/validations/auth.schema';
 
-class AuthService {
+class FirebaseService {
   // Providers
   private googleProvider = new GoogleAuthProvider();
 
@@ -31,12 +31,13 @@ class AuthService {
     try {
       const result = await signInWithPopup(auth, this.googleProvider);
       const credential = GoogleAuthProvider.credentialFromResult(result);
-      console.log(credential?.idToken);
+      const idToken = await result.user.getIdToken();
       return {
         success: true,
         data: {
           user: result.user,
-          token: credential?.accessToken,
+          credential,
+          idToken,
         },
       };
     } catch (error: any) {
@@ -83,4 +84,4 @@ class AuthService {
   }
 }
 
-export const authService = new AuthService();
+export const firebaseService = new FirebaseService();

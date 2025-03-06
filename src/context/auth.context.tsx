@@ -2,34 +2,59 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import { auth } from '@/src/lib/firebase/config';
-import { onAuthStateChanged, User } from 'firebase/auth';
+import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
+import { User } from '@/src/api/generated/models/User';
+import { AuthService } from '@/src/api/generated/services/AuthService';
 
 type AuthContextType = {
   user: User | null;
+  firebaseUser: FirebaseUser | null;
   loading: boolean;
 };
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
+  firebaseUser: null,
   loading: true,
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Listener này sẽ tự động kích hoạt khi auth state thay đổi
-    // HOẶC khi trang web vừa load, sẽ kiểm tra trạng thái hiện tại
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+    const unsubscribe = onAuthStateChanged(auth, async (currentFirebaseUser) => {
+      setFirebaseUser(currentFirebaseUser);
+
+      if (currentFirebaseUser) {
+        try {
+          // Lấy token để gọi API
+          const idToken = await currentFirebaseUser.getIdToken();
+
+          // Gọi API để lấy thông tin user hoặc đăng nhập
+
+          const backendUser = await AuthService.authControllerSignInByFirebaseToken({
+            token: idToken,
+          });
+          setUser(backendUser);
+        } catch (error) {
+          console.error('Failed to get user from backend:', error);
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+
       setLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
 
-  return <AuthContext.Provider value={{ user, loading }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, firebaseUser, loading }}>{children}</AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => useContext(AuthContext);

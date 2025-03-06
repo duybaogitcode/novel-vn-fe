@@ -4,6 +4,8 @@ import './globals.css';
 import { Providers } from '../src/provider/heroui.provider';
 import { AuthProvider } from '@/src/context/auth.context';
 
+import { OpenAPI } from '@/src/api/generated';
+
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
@@ -24,6 +26,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  OpenAPI.BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9999';
+  OpenAPI.WITH_CREDENTIALS = true;
+
   return (
     <html lang='en' className='dark'>
       <head>

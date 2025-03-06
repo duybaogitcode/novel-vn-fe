@@ -8,7 +8,8 @@ import { Controller, useForm } from 'react-hook-form';
 import { SigninFormValues, signinSchema } from '@/src/lib/validations/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { authService } from '@/src/service/auth.service';
+import { firebaseService } from '@/src/lib/firebase/firebase.service';
+import { AuthService, FirebaseIdToken } from '@/src/api/generated';
 
 export default function SignInForm() {
   const [isVisible, setIsVisible] = useState(false);
@@ -38,7 +39,7 @@ export default function SignInForm() {
     setErrorMessage(null);
 
     try {
-      const result = await authService.loginWithEmailPassword(data);
+      const result = await firebaseService.loginWithEmailPassword(data);
       if (result.success) {
         console.log('Đăng nhập thành công!', result.data);
         router.push('/');
@@ -58,12 +59,28 @@ export default function SignInForm() {
     setErrorMessage(null);
 
     try {
-      const result = await authService.loginWithGoogle();
+      const result = await firebaseService.loginWithGoogle();
       if (result.success) {
-        console.log('Đăng nhập Google thành công!', result.data);
-        router.push('/');
+        const idToken = await result.data?.user?.getIdToken();
+        if (!idToken) {
+          setErrorMessage('Có lỗi xảy ra khi đăng nhập với Google');
+          return;
+        }
+
+        try {
+          const body: FirebaseIdToken = {
+            token: idToken,
+          };
+
+          const response = await AuthService.authControllerSignInByFirebaseToken(body);
+          console.log('Đăng nhập Google thành công!', response);
+          router.push('/');
+        } catch (apiError: any) {
+          console.error('Backend API error:', apiError);
+          setErrorMessage('Lỗi xác thực với hệ thống: ' + (apiError.message || ''));
+        }
       } else {
-        setErrorMessage(result.error);
+        setErrorMessage(result.error || 'Có lỗi xảy ra khi đăng nhập với Google');
       }
     } catch (error: any) {
       setErrorMessage('Có lỗi xảy ra khi đăng nhập với Google');

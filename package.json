@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": " next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-api": "openapi --input http://localhost:9999/api-json --output src/api/generated && node scripts/fix-openapi.js"
   },
   "dependencies": {
     "@heroui/react": "^2.7.2",
@@ -30,6 +31,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.1.7",
+    "openapi-typescript-codegen": "^0.29.0",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
