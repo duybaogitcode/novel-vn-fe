@@ -10,12 +10,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { firebaseService } from '@/src/lib/firebase/firebase.service';
 import { AuthService, FirebaseIdToken } from '@/src/api/generated';
+import { useAuth } from '@/src/context/auth.context';
 
 export default function SignInForm() {
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { user } = useAuth();
   const router = useRouter();
 
   const toggleVisibility = () => setIsVisible(!isVisible);
@@ -60,27 +62,9 @@ export default function SignInForm() {
 
     try {
       const result = await firebaseService.loginWithGoogle();
+
       if (result.success) {
-        const idToken = await result.data?.user?.getIdToken();
-        if (!idToken) {
-          setErrorMessage('Có lỗi xảy ra khi đăng nhập với Google');
-          return;
-        }
-
-        try {
-          const body: FirebaseIdToken = {
-            token: idToken,
-          };
-
-          const response = await AuthService.authControllerSignInByFirebaseToken(body);
-          console.log('Đăng nhập Google thành công!', response);
-          router.push('/');
-        } catch (apiError: any) {
-          console.error('Backend API error:', apiError);
-          setErrorMessage('Lỗi xác thực với hệ thống: ' + (apiError.message || ''));
-        }
-      } else {
-        setErrorMessage(result.error || 'Có lỗi xảy ra khi đăng nhập với Google');
+        window.location.href = '/'; // Hoặc có thể dùng window.location.replace('/');
       }
     } catch (error: any) {
       setErrorMessage('Có lỗi xảy ra khi đăng nhập với Google');

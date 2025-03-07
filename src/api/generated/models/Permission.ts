@@ -4,6 +4,14 @@
 /* eslint-disable */
 export type Permission = {
     /**
+     * Date of creation
+     */
+    createdAt: string;
+    /**
+     * Date of last update
+     */
+    updatedAt: string;
+    /**
      * Permission name
      */
     name: string;

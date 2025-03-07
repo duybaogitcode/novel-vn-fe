@@ -2,9 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Permission } from './Permission';
-import type { User } from './User';
-export type Role = {
+export type Origin = {
     /**
      * Date of creation
      */
@@ -14,18 +12,12 @@ export type Role = {
      */
     updatedAt: string;
     /**
-     * Role slug
-     */
-    readonly slug?: string;
-    /**
-     * Role name
+     * Origin name
      */
     name: string;
     /**
-     * Role description
+     * Origin slug
      */
-    description: string;
-    permissions: Array<Array<Permission>>;
-    users: Array<Array<User>>;
+    slug: string;
 };
 

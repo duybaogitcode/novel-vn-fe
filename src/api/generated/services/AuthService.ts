@@ -25,13 +25,23 @@ export class AuthService {
         });
     }
     /**
-     * @returns any
+     * @returns User Refresh token
      * @throws ApiError
      */
-    public static authControllerRefresh(): CancelablePromise<any> {
+    public static authControllerRefresh(): CancelablePromise<User> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/auth/refresh',
+        });
+    }
+    /**
+     * @returns any
+     * @throws ApiError
+     */
+    public static authControllerSignOut(): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/auth/signOut',
         });
     }
 }

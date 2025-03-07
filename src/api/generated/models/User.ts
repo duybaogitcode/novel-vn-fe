@@ -4,6 +4,14 @@
 /* eslint-disable */
 export type User = {
     /**
+     * Date of creation
+     */
+    createdAt: string;
+    /**
+     * Date of last update
+     */
+    updatedAt: string;
+    /**
      * First name
      */
     firstName: string;

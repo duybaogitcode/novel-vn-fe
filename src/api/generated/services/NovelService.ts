@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { CreateNovelDto } from '../models/CreateNovelDto';
+import type { Novel } from '../models/Novel';
 import type { UpdateNovelDto } from '../models/UpdateNovelDto';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -34,18 +35,18 @@ export class NovelService {
         });
     }
     /**
-     * @param id
-     * @returns any
+     * @param slug
+     * @returns Novel Get a novel by ID
      * @throws ApiError
      */
     public static novelControllerFindOne(
-        id: string,
-    ): CancelablePromise<any> {
+        slug: string,
+    ): CancelablePromise<Novel> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/novel/{id}',
+            url: '/novel/{slug}',
             path: {
-                'id': id,
+                'slug': slug,
             },
         });
     }

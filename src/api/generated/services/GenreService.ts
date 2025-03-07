@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { CreateGenreDto } from '../models/CreateGenreDto';
+import type { Genre } from '../models/Genre';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -24,10 +25,10 @@ export class GenreService {
         });
     }
     /**
-     * @returns any
+     * @returns Genre Get all genres
      * @throws ApiError
      */
-    public static genreControllerFindAll(): CancelablePromise<any> {
+    public static genreControllerFindAll(): CancelablePromise<Array<Genre>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/genre',

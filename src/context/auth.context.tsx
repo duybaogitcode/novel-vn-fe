@@ -10,18 +10,49 @@ type AuthContextType = {
   user: User | null;
   firebaseUser: FirebaseUser | null;
   loading: boolean;
+  logout: () => Promise<void>; // Đăng xuất
 };
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   firebaseUser: null,
   loading: true,
+  logout: async () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const logout = async () => {
+    try {
+      // Đăng xuất từ backend trước
+      await AuthService.authControllerSignOut();
+
+      // Sau đó đăng xuất từ Firebase
+      await auth.signOut();
+
+      // Cập nhật state
+      setUser(null);
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
+  // Refresh lại token sau mỗi 1 tiếng 50 phút
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      if (auth.currentUser) {
+        try {
+          await AuthService.authControllerRefresh();
+        } catch (error) {
+          console.error('Failed to refresh token:', error);
+        }
+      }
+    }, 60 * 60 * 1000 + 50 * 60 * 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentFirebaseUser) => {
@@ -53,7 +84,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, firebaseUser, loading }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, firebaseUser, loading, logout }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 
